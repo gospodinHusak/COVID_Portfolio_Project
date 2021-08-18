@@ -42,7 +42,7 @@ ORDER BY got_covid_percentage DESC
 
 SELECT location, MAX(CAST(total_deaths AS int)) AS highest_death_count
 FROM Covid_Portfolio_Project..Covid_deaths
-WHERE continent IS NOT NULL AND location != 'World'  -- otherwise, it includes global observations (continents AND the world)
+WHERE continent IS NOT NULL AND location != ('World', 'European Union', 'International')  -- otherwise, it includes global observations (continents and the world and others)
 GROUP BY location
 ORDER BY highest_death_count DESC
 
@@ -51,7 +51,7 @@ ORDER BY highest_death_count DESC
 
 SELECT location, MAX(CAST(total_deaths AS int)) AS highest_death_count
 FROM Covid_Portfolio_Project..Covid_deaths
-WHERE continent IS NULL AND location != 'World' 
+WHERE continent IS NULL AND location != ('World', 'European Union', 'International')
 GROUP BY location
 ORDER BY highest_death_count DESC
 
@@ -88,7 +88,7 @@ ORDER BY 2,3
 
 -- If we want to look at the rate of vaccinated people we have several options:
 
---	น1 USE CTE
+--	ยน1 USE CTE
 
 with pop_vs_vac (continent, location, date, population, new_vaccinations, cummulative_vaccinations)
 AS
@@ -104,7 +104,7 @@ WHERE dea.continent IS NOT NULL
 SELECT *, (cummulative_vaccinations/population)*100 AS vaccinated_rate
 FROM pop_vs_vac
 
---	น2 TEMP TABLE
+--	ยน2 TEMP TABLE
 
 DROP TABLE IF exists #Percent_Population_Vaccinated
 CREATE TABLE #Percent_Population_Vaccinated
@@ -130,7 +130,7 @@ SELECT *, (cummulative_vaccinations/population)*100 AS vaccinated_rate
 FROM #Percent_Population_Vaccinated
 
 
---	น3 CREATE VIEW 
+--	ยน3 CREATE VIEW 
 
 CREATE VIEW Percent_Population_Vaccinated AS
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
